@@ -1,0 +1,5 @@
+[MAIN]
+ignore-patterns=^models\.py$
+
+[TYPECHECK]
+ignored-classes=IseDataConnect
