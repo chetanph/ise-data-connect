@@ -1,3 +1,5 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/chetanph/ise-data-connect)
+
 # ISE Data Connect
 
 This repository provides a Python library to interact with Cisco Identity Services Engine (ISE) Data Connect.
@@ -74,6 +76,8 @@ Then run main app
 ```bash
 python main.py
 ```
+
+This has been tested with Python 3.11 and ISE version 3.2.
 
 ### DevNet Sandbox
 
