@@ -19,7 +19,7 @@ class DatabaseConnector(ABC):
     @abstractmethod
     def connect(self):
         """
-        Connect to the database.
+        Establish OJDBC connection to the database
         """
 
     @abstractmethod
@@ -29,28 +29,42 @@ class DatabaseConnector(ABC):
         """
 
     @abstractmethod
-    def execute_query(self, query: str, params: list | tuple | dict = None):
+    def execute_query(self, query: str, params: list | tuple | dict = None) -> list:
         """
-        Execute query against the database.
+        Execute SQL query against the database.
 
         Args:
             query (str): SQL query string
-            params (dict): Named query parameters
+            params (list | tuple | dict): Named query parameters
+
+        Returns:
+            list: All records from the query result.
         """
 
     @property
-    def tables(self):
+    def tables(self) -> list:
         """
         List of all table names in the database
+
+        Returns:
+            list: List of table names available in the database
         """
         return self.execute_query("SELECT TABLE_NAME, COMMENTS FROM USER_TAB_COMMENTS")
 
-    def table_schema(self, table_name):
+    def table_schema(self, table_name: str) -> list:
         """
-        Return schema for all the tables.
+        Return schema for the specified table.
 
         These values are returned for each database table:
-            Column Name, Data Type, Column Description
+        - Column Name
+        - Data Type
+        - Column Description
+
+        Args:
+            table_name (str): Database table name
+
+        Returns:
+            list: List of Column names, their data type and description of each column
         """
         query = """SELECT utc.COLUMN_NAME, utc.DATA_TYPE, ucc.COMMENTS
             FROM USER_TAB_COLUMNS utc

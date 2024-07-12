@@ -42,7 +42,7 @@ class ThinOjdbcConnector(DatabaseConnector):
         )
         self.connection = None
 
-    def _ssl_context(self, verify):
+    def _ssl_context(self, verify: bool):
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         if not verify:
             ssl_context.check_hostname = False
@@ -50,6 +50,12 @@ class ThinOjdbcConnector(DatabaseConnector):
         return ssl_context
 
     def connect(self):
+        """
+        Establish OJDBC connection to the database
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when connecting to the database
+        """
         self.connection = oracledb.connect(params=self.params)
         try:
             self.connection = oracledb.connect(params=self.params)
@@ -59,6 +65,12 @@ class ThinOjdbcConnector(DatabaseConnector):
             raise DatabaseConnectorException(err) from err
 
     def close(self):
+        """
+        Close the database connection
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when closing the connection
+        """
         if self.connection:
             try:
                 self.connection.close()
@@ -67,7 +79,20 @@ class ThinOjdbcConnector(DatabaseConnector):
                 logging.error("Failed to close the database connection: %s", err)
                 raise DatabaseConnectorException(err) from err
 
-    def execute_query(self, query: str, params: list | tuple | dict = None):
+    def execute_query(self, query: str, params: list | tuple | dict = None) -> list:
+        """
+        Execute SQL query against the database.
+
+        Args:
+            query (str): SQL query string
+            params (list | tuple | dict): Named query parameters
+
+        Returns:
+            list: All records from the query result.
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when executing the query
+        """
         if not self.connection:
             raise ConnectionError("Database connection is not established.")
 

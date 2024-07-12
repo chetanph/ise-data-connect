@@ -15,10 +15,26 @@ class DatabaseConnectorFactory(ABC):  # pylint: disable=too-few-public-methods
     """
 
     @staticmethod
-    def create_connector(**kwargs) -> DatabaseConnector:
+    def create_connector(
+        hostname: str, port: str, user: str, password: str, **kwargs
+    ) -> DatabaseConnector:
         """
         Create Database Connector
+
+        Args:
+            hostname (str): OJDBC hostname
+            port (str): OJDBC port
+            user (str): OJDBC username
+            password (str): OJDBC password
+            kwargs (dict): Additional parameters for specific connector implementation
+
+        Raises:
+            ValueError: For unexpected input parameters
+
+        Returns:
+            DatabaseConnector: Database Connector
         """
+
 
 
 class OjdbcConnectorFactory(DatabaseConnectorFactory):  # pylint: disable=too-few-public-methods
@@ -30,17 +46,37 @@ class OjdbcConnectorFactory(DatabaseConnectorFactory):  # pylint: disable=too-fe
     """
 
     @staticmethod
-    def create_connector(**kwargs) -> DatabaseConnector:
-        required_params = ["hostname", "port", "user", "password"]
-        thick_specific_params = ["jar", "trust_store", "trust_store_password"]
+    def create_connector(
+        hostname: str, port: str, user: str, password: str, **kwargs
+    ) -> DatabaseConnector:
+        """
+        Create Database Connector
 
-        missing_params = [param for param in required_params if param not in kwargs]
-        if missing_params:
-            raise ValueError(f"Missing required parameters: {', '.join(missing_params)}")
+        Args:
+            hostname (str): OJDBC hostname
+            port (str): OJDBC port
+            user (str): OJDBC username
+            password (str): OJDBC password
+
+            For `ThinOjdbcConnector`:
+            verify (bool, optional): Verify OJDBC certificate, Defaults to True.
+
+            For `ThickOjdbcConnector`:
+            jar (str): Thick client JAR filename
+            trust_store (str): Java key store filename
+            trust_store_password (str): Java key store password
+
+        Raises:
+            ValueError: For unexpected input parameters
+
+        Returns:
+            DatabaseConnector: Database Connector
+        """
+        thick_specific_params = ["jar", "trust_store", "trust_store_password"]
 
         if all(param in kwargs for param in thick_specific_params):
             logging.debug("Using thick client for OJDBC connection")
-            return ThickOjdbcConnector(**kwargs)
+            return ThickOjdbcConnector(hostname, port, user, password, **kwargs)
 
         unexpected_params = [param for param in thick_specific_params if param in kwargs]
         if unexpected_params:
@@ -48,4 +84,4 @@ class OjdbcConnectorFactory(DatabaseConnectorFactory):  # pylint: disable=too-fe
                 f"Unexpected parameters for ThinOjdbcConnector: {', '.join(unexpected_params)}"
             )
         logging.debug("Using thin client for OJDBC connection")
-        return ThinOjdbcConnector(**kwargs)
+        return ThinOjdbcConnector(hostname, port, user, password, **kwargs)

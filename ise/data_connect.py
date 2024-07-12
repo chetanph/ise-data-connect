@@ -17,7 +17,7 @@ class IseDataConnect:
     - `ADMIN_USERS`: `get_admin_users`
 
     Args:
-        @hostname (str): ISE hostname for Data Connect connection
+        hostname (str): ISE hostname for Data Connect connection
         port (str): ISE port for Data Connect connection
         user (str): ISE Data Connect username
         password (str): ISE Data Connect password
@@ -29,17 +29,20 @@ class IseDataConnect:
 
     def __init__(self, hostname: str, port: str, user: str, password: str, **kwargs):
         self._db_connector = OjdbcConnectorFactory.create_connector(
-            hostname=hostname,
-            port=port,
-            user=user,
-            password=password,
-            **kwargs,
+            hostname, port, user, password, **kwargs
         )
 
     @handle_exception
-    def execute_query(self, query, params=None):
+    def execute_query(self, query: str, params: list | tuple | dict = None) -> list:
         """
-        Execute a SQL query statement and return results
+        Execute SQL query against the database.
+
+        Args:
+            query (str): SQL query string
+            params (list | tuple | dict): Named query parameters
+
+        Returns:
+            list: All records from the query result.
         """
         return self._db_connector.execute_query(query, params)
 

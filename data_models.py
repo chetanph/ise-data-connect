@@ -12,7 +12,7 @@ from util import parse_arguments
 
 
 MODELS_HEADER = '''"""
-ISE Data Models for Data Connect table views
+Python Data Models for ISE Data Connect table views
 
 This is an auto-generated file
 """

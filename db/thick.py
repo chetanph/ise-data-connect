@@ -8,9 +8,15 @@ import jpype
 from .connector import DatabaseConnector, DatabaseConnectorException
 
 
-def stringified(rows):
+def stringified(rows: list) -> list:
     """
-    Return stringified rows returned by OJDBC connection
+    Convert all the items in all the rows to string
+
+    Args:
+        rows (list): Rows returned by database query result
+
+    Returns:
+        list: Return stringified rows returned by OJDBC connection
     """
     return [[str(entry) for entry in row] for row in rows]
 
@@ -65,7 +71,10 @@ class ThickOjdbcConnector(DatabaseConnector):  # pylint: disable=too-many-instan
 
     def connect(self):
         """
-        Establish OJDBC connection to ISE Data Connect
+        Establish OJDBC connection to the database
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when connecting to the database
         """
         try:
             self._start_jvm()
@@ -86,9 +95,19 @@ class ThickOjdbcConnector(DatabaseConnector):  # pylint: disable=too-many-instan
             logging.error("Invalid connection parameters: %s", err)
             raise DatabaseConnectorException(err) from err
 
-    def execute_query(self, query, params=None):
+    def execute_query(self, query: str, params: list | tuple | dict = None) -> list:
         """
-        Execute SQL query.
+        Execute SQL query against the database.
+
+        Args:
+            query (str): SQL query string
+            params (list | tuple | dict): Named query parameters
+
+        Returns:
+            list: All records from the query result.
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when executing the query
         """
         try:
             self.cursor.execute(operation=query, parameters=params)
@@ -103,7 +122,10 @@ class ThickOjdbcConnector(DatabaseConnector):  # pylint: disable=too-many-instan
 
     def close(self):
         """
-        Close database connection.
+        Close the database connection
+
+        Raises:
+            DatabaseConnectorException: For any errors encountered when closing the connection
         """
         if self.cursor:
             self.cursor.close()
@@ -114,18 +136,26 @@ class ThickOjdbcConnector(DatabaseConnector):  # pylint: disable=too-many-instan
             jpype.shutdownJVM()
 
     @property
-    def tables(self):
+    def tables(self) -> list:
         """
         List of all table names in the database
         """
         return stringified(super().tables)
 
-    def table_schema(self, table_name):
+    def table_schema(self, table_name: str) -> list:
         """
         Return schema for all the tables.
 
         These values are returned for each database table:
-            Column Name, Data Type, Column Description
+        - Column Name
+        - Data Type
+        - Column Description
+
+        Args:
+            table_name (str): Database table name
+
+        Returns:
+            list: List of Column names, their data type and description of each column
         """
         query = """SELECT utc.COLUMN_NAME, utc.DATA_TYPE, ucc.COMMENTS
             FROM USER_TAB_COLUMNS utc
