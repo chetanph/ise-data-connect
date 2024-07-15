@@ -13,14 +13,14 @@ def main():
     """
     args = parse_arguments()
     configure_logging(args.log_level)
-
+    print(f"{type(args.insecure)} {args.insecure}")
     try:
         with IseDataConnect(
             hostname=args.ise_hostname,
             port=args.ise_dataconnect_port,
             user=args.dataconnect_user,
             password=args.dataconnect_password,
-            verify=False,  # Thin Connector
+            verify=not args.insecure,  # Thin Connector
             # jar=args.ojdbc_jar,                             # Thick Connector
             # trust_store=args.trust_store,                   # Thick Connector
             # trust_store_password=args.trust_store_password  # Thick Connector

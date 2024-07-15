@@ -16,15 +16,21 @@ class IseDataConnect:
     - `NODE_LIST`: `get_node_list`
     - `ADMIN_USERS`: `get_admin_users`
 
+    Both Thin and Thick modes of connecting to ISE Data Connect are available.
+
     Args:
         hostname (str): ISE hostname for Data Connect connection
         port (str): ISE port for Data Connect connection
         user (str): ISE Data Connect username
         password (str): ISE Data Connect password
-        jar (str): Thick client JAR filename
-        trust_store (str): Java key store filename, required for thick client
-        trust_store_password (str): Java key store password, required for thick client
-        verify (bool, optional): Verify ISE Data Connect certificate, Defaults to True.
+
+        For thin connector:
+        - `verify` _bool, optional_ - Verify ISE Data Connect certificate, Defaults to True.
+
+        For thick connector`:
+        - `jar` _str_ - Thick client JAR filename
+        - `trust_store` _str_ - Java key store filename
+        - `trust_store_password` _str_ - Java key store password
     """
 
     def __init__(self, hostname: str, port: str, user: str, password: str, **kwargs):

@@ -36,7 +36,6 @@ class DatabaseConnectorFactory(ABC):  # pylint: disable=too-few-public-methods
         """
 
 
-
 class OjdbcConnectorFactory(DatabaseConnectorFactory):  # pylint: disable=too-few-public-methods
     """
     Database Connector Factory that return either of these connector instances:

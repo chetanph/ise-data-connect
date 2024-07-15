@@ -2,7 +2,7 @@
 
 # ISE Data Connect
 
-This repository provides a Python library to interact with Cisco Identity Services Engine (ISE) Data Connect.
+This repository provides a Python library to interact with Cisco Identity Services Engine (ISE) Data Connect. The goal is to provide a way to interact with ISE data connect with minimal Python code and focus more on use cases.
 
 ```python
 from ise import IseDataConnect
@@ -19,6 +19,8 @@ The `main.py` example shows how to obtain node list as well as execute SQL queri
 authentication summary reports.
 
 ![Main Output](./images/output.png)
+
+More detailed documentation is available [here](./docs/README.md)
 
 ## Installation
 
@@ -46,21 +48,31 @@ pip install -r requirements.txt
 
 ## Configuration
 
+These environment variables or CLI arguments can be used to provide inputs to `main.py`. CLI arguments take precedence over environment variables.
+
+| Environment Variable | CLI Argument | Purpose |
+| --- | --- | --- |
+| `ISE_HOSTNAME` | `--ise-hostname` | ISE hostname for Data Connect |
+| `ISE_DATACONNECT_PORT` | `--ise-dataconnect-port` | ISE Data Connect port, defaults to `2484` |
+| `DATACONNECT_USER` | `--dataconnect-user` | ISE Data Connect username, defaults to `dataconnect` |
+| `DATACONNECT_PASSWORD` | `--dataconnect-password` | ISE Data Connect password |
+| `DATACONNECT_LOG_LEVEL` | `--log-level` | Logging level, defaults to `INFO` |
+| `DATACONNECT_INSECURE` | `--insecure` | Ignore ISE Data Connect certificate, defaults to `False`. Used for thin client |
+| `OJDBC_JAR` | `--ojdbc-jar` | Path of the JAR file used for thick client, defaults to `ojdbc11-23.4.0.24.05.jar` |
+| `TRUST_STORE` | `--trust-store` | Path to Java key store file (used for thick client), defaults to `keystore.jks` |
+| `TRUST_STORE_PASSWORD` | `--trust-store-password` | Password for Java key store file (used for thick client) |
+
 Provide input configuration, either as environment variables or CLI arguments.
 
 ```bash
 # (Option 1) Environment Variables
 export ISE_HOSTNAME="ise-snmt.example.org"
-export ISE_DATACONNECT_PORT="2484"
-export DATACONNECT_USER="dataconnect"
 export DATACONNECT_PASSWORD="Cisco123456#"
 
 # (Option 2)
 python main.py \
-  --ise_hostname "ise-snmt.example.org" \
-  --ise_dataconnect_port "2484" \
-  --dataconnect_user "dataconnect" \
-  --dataconnect_password "Cisco123456#"
+  --ise-hostname "ise-snmt.example.org" \
+  --dataconnect-password "Cisco123456#"
 ```
 
 ## How to test the software
@@ -78,6 +90,11 @@ python main.py
 ```
 
 This has been tested with Python 3.11 and ISE version 3.2.
+
+### References
+
+- [ISE Data Connect](https://developer.cisco.com/docs/dataconnect/introduction/)
+- [ISE Data Connect Python example by 1homas@github](https://github.com/1homas/ISE_Python_Scripts/tree/main?tab=readme-ov-file#iseqlpy)
 
 ### DevNet Sandbox
 

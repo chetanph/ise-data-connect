@@ -11,6 +11,22 @@ from rich.console import Console
 from rich.table import Table
 
 
+def get_boolean_env_var(env_var_name: str, default_value=False) -> bool:
+    """Read an environment variable and interpret it as a boolean.
+
+    Args:
+        env_var_name (str): The name of the environment variable.
+        default_value (bool): The default boolean value to return if the environment var is not set.
+
+    Returns:
+        bool: The boolean value of the environment variable.
+    """
+    value = os.getenv(env_var_name)
+    if value is None:
+        return default_value
+    return value.lower() in ["true", "1", "y", "yes"]
+
+
 def parse_arguments():
     """
     Parse input values from CLI arguments or environment variables.
@@ -19,14 +35,17 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Read parameters for ISE data connect.")
 
-    parser.add_argument("--ojdbc-jar", default=os.getenv("OJDBC_JAR", "ojdbc11-23.4.0.24.05.jar"))
-    parser.add_argument("--trust-store", default=os.getenv("TRUST_STORE", "keystore.jks"))
-    parser.add_argument("--trust-store-password", default=os.getenv("TRUST_STORE_PASSWORD"))
     parser.add_argument("--ise-hostname", default=os.getenv("ISE_HOSTNAME"))
     parser.add_argument("--ise-dataconnect-port", default=os.getenv("ISE_DATACONNECT_PORT", "2484"))
     parser.add_argument("--dataconnect-user", default=os.getenv("DATACONNECT_USER", "dataconnect"))
     parser.add_argument("--dataconnect-password", default=os.getenv("DATACONNECT_PASSWORD"))
     parser.add_argument("--log-level", default=os.getenv("DATACONNECT_LOG_LEVEL", "INFO"))
+    parser.add_argument(
+        "--insecure", action="store_true", default=get_boolean_env_var("DATACONNECT_INSECURE")
+    )
+    parser.add_argument("--ojdbc-jar", default=os.getenv("OJDBC_JAR", "ojdbc11-23.4.0.24.05.jar"))
+    parser.add_argument("--trust-store", default=os.getenv("TRUST_STORE", "keystore.jks"))
+    parser.add_argument("--trust-store-password", default=os.getenv("TRUST_STORE_PASSWORD"))
     return parser.parse_args()
 
 

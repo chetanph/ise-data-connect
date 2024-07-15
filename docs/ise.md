@@ -26,16 +26,22 @@ For all the tables available, a `get_<table_name>` method is supported, e.g.
 - `NODE_LIST`: `get_node_list`
 - `ADMIN_USERS`: `get_admin_users`
 
+Both Thin and Thick modes of connecting to ISE Data Connect are available.
+
 **Arguments**:
 
 - `hostname` _str_ - ISE hostname for Data Connect connection
 - `port` _str_ - ISE port for Data Connect connection
 - `user` _str_ - ISE Data Connect username
 - `password` _str_ - ISE Data Connect password
-- `jar` _str_ - Thick client JAR filename
-- `trust_store` _str_ - Java key store filename, required for thick client
-- `trust_store_password` _str_ - Java key store password, required for thick client
+
+For thin connector:
 - `verify` _bool, optional_ - Verify ISE Data Connect certificate, Defaults to True.
+  
+For thick connector`:
+- `jar` _str_ - Thick client JAR filename
+- `trust_store` _str_ - Java key store filename
+- `trust_store_password` _str_ - Java key store password
 
 <a id="data_connect.IseDataConnect.execute_query"></a>
 
