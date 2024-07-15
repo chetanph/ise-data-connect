@@ -4,6 +4,7 @@ Example usage of ISE Data Connect
 
 import traceback
 from ise import IseDataConnect, IseDataConnectException
+from usecases import get_radius_authentications_by_day, get_radius_authentications_by_location
 from util import parse_arguments, configure_logging, print_table
 
 
@@ -13,7 +14,6 @@ def main():
     """
     args = parse_arguments()
     configure_logging(args.log_level)
-    print(f"{type(args.insecure)} {args.insecure}")
     try:
         with IseDataConnect(
             hostname=args.ise_hostname,
@@ -52,29 +52,11 @@ def main():
                 ],
             )
 
-            query_auth_by_day = """SELECT
-                TRUNC(TIMESTAMP) DAY, SUM(PASSED_COUNT), SUM(FAILED_COUNT)
-            FROM RADIUS_AUTHENTICATION_SUMMARY
-            GROUP BY TRUNC(TIMESTAMP)
-            ORDER BY DAY DESC"""
-
             print_table(
                 "Authentications by Day",
                 ["Day", "Passed", "Failed"],
-                ise_dc.execute_query(query_auth_by_day),
+                get_radius_authentications_by_day(ise_dc),
             )
-
-            query_auth_by_location = """SELECT
-                LOCATION,
-                SUM(PASSED_COUNT) AS TOTAL_PASSED_COUNT,
-                SUM(FAILED_COUNT) AS TOTAL_FAILED_COUNT,
-                (SUM(PASSED_COUNT) + SUM(FAILED_COUNT)) AS TOTAL_COUNT,
-                ROUND((SUM(FAILED_COUNT) / NULLIF(SUM(PASSED_COUNT) + SUM(FAILED_COUNT), 0)) * 100, 2) AS FAILED_PERCENTAGE,
-                AVG(TOTAL_RESPONSE_TIME) AS AVG_RESPONSE_TIME,
-                MAX(MAX_RESPONSE_TIME) AS PEAK_RESPONSE_TIME
-            FROM RADIUS_AUTHENTICATION_SUMMARY
-            GROUP BY LOCATION
-            ORDER BY TOTAL_COUNT DESC"""
 
             print_table(
                 "Authentications by Locations",
@@ -87,7 +69,7 @@ def main():
                     "Average Response Time",
                     "Max Response Time",
                 ],
-                ise_dc.execute_query(query_auth_by_location),
+                get_radius_authentications_by_location(ise_dc),
             )
 
     except IseDataConnectException as e:

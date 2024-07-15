@@ -15,6 +15,12 @@ with IseDataConnect("ise-snmt.example.org", "2484", "dataconnect", "Cisco.123456
       print(admin_user)
 ```
 
+The `dashboard.py` example shows web dashboard for ISE Data Connect using streamlit.
+
+![System Summary](./images/chart_system_summary.png)
+
+![RADIUS Authentications](./images/chart_radius_auth_by_location.png)
+
 The `main.py` example shows how to obtain node list as well as execute SQL queries for RADIUS
 authentication summary reports.
 
@@ -49,6 +55,8 @@ pip install -r requirements.txt
 ## Configuration
 
 These environment variables or CLI arguments can be used to provide inputs to `main.py`. CLI arguments take precedence over environment variables.
+
+`dashboard.py` is able to take inputs using environment variables only.
 
 | Environment Variable | CLI Argument | Purpose |
 | --- | --- | --- |
@@ -87,6 +95,12 @@ Then run main app
 
 ```bash
 python main.py
+```
+
+For the dashboard app
+
+```bash
+streamlit run dashboard.py
 ```
 
 This has been tested with Python 3.11 and ISE version 3.2.
