@@ -7,7 +7,7 @@ This repository provides a Python library to interact with Cisco Identity Servic
 ```python
 from ise import IseDataConnect
 
-with IseDataConnect("ise-snmt.example.org", "2484", "dataconnect", "Cisco.123456#", verify=False) as ise_dc:
+with IseDataConnect("ise-smnt.example.org", "2484", "dataconnect", "Cisco.123456#", verify=False) as ise_dc:
     for node in ise_dc.get_node_list():
       print(f"{node.hostname} {node.node_type} {node.replication_status}")
 
@@ -74,12 +74,12 @@ Provide input configuration, either as environment variables or CLI arguments.
 
 ```bash
 # (Option 1) Environment Variables
-export ISE_HOSTNAME="ise-snmt.example.org"
+export ISE_HOSTNAME="ise-smnt.example.org"
 export DATACONNECT_PASSWORD="Cisco123456#"
 
 # (Option 2)
 python main.py \
-  --ise-hostname "ise-snmt.example.org" \
+  --ise-hostname "ise-smnt.example.org" \
   --dataconnect-password "Cisco123456#"
 ```
 
