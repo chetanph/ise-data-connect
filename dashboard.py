@@ -14,7 +14,7 @@ st.set_page_config(page_title="Cisco ISE Data Connect dashboard", layout="wide")
 
 def main():
     """
-    Streamlit UI app for ISE Data Connect dashbaord
+    Streamlit UI app for ISE Data Connect dashboard
     """
     st.title(":blue[ISE Data Connect Dashboards]")
 
